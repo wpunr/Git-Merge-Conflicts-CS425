@@ -24,7 +24,13 @@ double normalize(double x) {
 
 
 double computeFunctionValue(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    // Check if near critical points where f'(x) = 0 (x = ±1)
+    if (std::abs(x - 1.0) < DELTA || std::abs(x + 1.0) < DELTA) {
+        // Use linearization for stability
+        double a = (std::abs(x - 1.0) < DELTA) ? 1.0 : -1.0;
+        return f(a) + fprime(a) * (x - a);
+    }
+    return f(x);
 }
 
 double computeDefiniteIntegral(double x) {
@@ -58,6 +64,9 @@ double evaluate(double x, ModeSet modes) {
     }
     if (modes & INTEGRAL) {
         result = computeDefiniteIntegral(result);
+    }
+    if (modes & VALUE) {
+        result = computeFunctionValue(result);
     }
     return result;
 }
