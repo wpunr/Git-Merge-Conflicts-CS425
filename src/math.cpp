@@ -24,7 +24,7 @@ double computeFunctionValue(double x) {
 }
 
 double computeDefiniteIntegral(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    return Fantiderivative(x) - Fantiderivative(0.0);
 }
 
 double applyNewtonStep(double x) {
@@ -37,7 +37,9 @@ double computeInverseDerivative(double x) {
 
 double evaluate(double x, ModeSet modes) {
     double result = x;
-    // <== REPLACE WITH PROVIDED FUNCTION CALL
+    if (modes & INTEGRAL) {
+        result = computeDefiniteIntegral(result);
+    }
     return result;
 }
 
