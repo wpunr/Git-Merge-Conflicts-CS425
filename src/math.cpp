@@ -56,17 +56,17 @@ double computeInverseDerivative(double x) {
 double evaluate(double x, ModeSet modes) {
     double result = x;
     result = normalize(x);
+    if (modes & VALUE) {
+        result = computeFunctionValue(result);
+    }
+    if (modes & INTEGRAL) {
+        result = computeDefiniteIntegral(result);
+    }
     if (modes & NEWTON_STEP) {
         result = applyNewtonStep(result);
     }
     if (modes & DERIVATIVE) {
         result = computeInverseDerivative(result);
-    }
-    if (modes & INTEGRAL) {
-        result = computeDefiniteIntegral(result);
-    }
-    if (modes & VALUE) {
-        result = computeFunctionValue(result);
     }
     return result;
 }
