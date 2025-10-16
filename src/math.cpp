@@ -1,4 +1,5 @@
 #include "math.hpp"
+#include <algorithm>
 
 namespace dm {
 
@@ -15,7 +16,10 @@ double Fantiderivative(double x) {
 }
 
 double normalize(double x) {
-    return x;
+    const double y = (x + CFG.offset) * CFG.scale;
+    return std::clamp(y,
+        static_cast<double>(CFG.lo),
+        static_cast<double>(CFG.hi));
 }
 
 
@@ -28,15 +32,30 @@ double computeDefiniteIntegral(double x) {
 }
 
 double applyNewtonStep(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    double deriv = fprime(x);
+    if (std::abs(deriv) >= EPS) {
+        return x - f(x) / deriv;
+    }
+    return x; // Guard: if f'(x) ≈ 0, no refinement
 }
 
 double computeInverseDerivative(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    double deriv = fprime(x);
+    if (std::abs(deriv) >= EPS) {
+        return 1.0 / deriv;
+    }
+    return x;
 }
 
 double evaluate(double x, ModeSet modes) {
     double result = x;
+    result = normalize(x);
+    if (modes & NEWTON_STEP) {
+        result = applyNewtonStep(result);
+    }
+    if (modes & DERIVATIVE) {
+        result = computeInverseDerivative(result);
+    }
     if (modes & INTEGRAL) {
         result = computeDefiniteIntegral(result);
     }
