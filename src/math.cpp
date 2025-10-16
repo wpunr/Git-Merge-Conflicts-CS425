@@ -1,4 +1,5 @@
 #include "math.hpp"
+#include <algorithm>
 
 namespace dm {
 
@@ -15,7 +16,10 @@ double Fantiderivative(double x) {
 }
 
 double normalize(double x) {
-    return x;
+    const double y = (x + CFG.offset) * CFG.scale;
+    return std::clamp(y,
+        static_cast<double>(CFG.lo),
+        static_cast<double>(CFG.hi));
 }
 
 
@@ -41,6 +45,7 @@ double computeInverseDerivative(double x) {
 
 double evaluate(double x, ModeSet modes) {
     double result = x;
+    result = normalize(x);
     if (modes & NEWTON_STEP) {
         result = applyNewtonStep(result);
     }
