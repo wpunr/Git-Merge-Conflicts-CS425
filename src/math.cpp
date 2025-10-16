@@ -32,12 +32,18 @@ double applyNewtonStep(double x) {
 }
 
 double computeInverseDerivative(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    double deriv = fprime(x);
+    if (std::abs(deriv) >= EPS) {
+        return 1.0 / deriv;
+    }
+    return x;
 }
 
 double evaluate(double x, ModeSet modes) {
     double result = x;
-    // <== REPLACE WITH PROVIDED FUNCTION CALL
+    if (modes & DERIVATIVE) {
+        result = computeInverseDerivative(result);
+    }
     return result;
 }
 
