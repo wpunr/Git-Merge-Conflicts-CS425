@@ -28,7 +28,11 @@ double computeDefiniteIntegral(double x) {
 }
 
 double applyNewtonStep(double x) {
-    return x;  // <== REPLACE WITH PROVIDED IMPLEMENTATION
+    double deriv = fprime(x);
+    if (std::abs(deriv) >= EPS) {
+        return x - f(x) / deriv;
+    }
+    return x; // Guard: if f'(x) ≈ 0, no refinement
 }
 
 double computeInverseDerivative(double x) {
@@ -37,7 +41,9 @@ double computeInverseDerivative(double x) {
 
 double evaluate(double x, ModeSet modes) {
     double result = x;
-    // <== REPLACE WITH PROVIDED FUNCTION CALL
+    if (modes & NEWTON_STEP) {
+        result = applyNewtonStep(result);
+    }
     return result;
 }
 
